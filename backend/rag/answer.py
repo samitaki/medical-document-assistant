@@ -5,9 +5,9 @@ import anthropic
 from app.config import get_settings
 from app.errors import ServiceError
 from rag.prompt import SYSTEM, build_messages
+from rag.snippet import snippet_for
 
 MAX_TOKENS = 1024
-SNIPPET_CHARS = 300
 CITATION = re.compile(r"\[(\d+)\]")
 
 NO_CONTEXT = "I have nothing indexed that relates to this question, so I cannot answer it."
@@ -40,10 +40,10 @@ def generate(question: str, chunks: list[dict], history: list[dict] | None = Non
         raise ServiceError(f"The answer model is unavailable: {e.message}", status=502) from e
 
     text = "".join(block.text for block in resp.content if block.type == "text")
-    return {"answer": text, "citations": citations_for(text, chunks)}
+    return {"answer": text, "citations": citations_for(text, chunks, question)}
 
 
-def citations_for(answer: str, chunks: list[dict]) -> list[dict]:
+def citations_for(answer: str, chunks: list[dict], question: str = "") -> list[dict]:
     """Maps each [n] in the answer back to its chunk, in order of first appearance.
 
     A number the model made up has no chunk behind it, so it is dropped rather than guessed at.
@@ -62,12 +62,7 @@ def citations_for(answer: str, chunks: list[dict]) -> list[dict]:
                 "filename": c["filename"],
                 "page": c["page"],
                 "kind": c["kind"],
-                "snippet": _snippet(c["text"]),
+                "snippet": snippet_for(c, question),
             }
         )
     return out
-
-
-def _snippet(text: str) -> str:
-    flat = " ".join(text.split())
-    return flat if len(flat) <= SNIPPET_CHARS else flat[:SNIPPET_CHARS].rstrip() + "..."

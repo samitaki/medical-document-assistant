@@ -5,14 +5,18 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from api.routes import router
+from app.config import get_settings
 from app.errors import ServiceError
 from ingest.store import embedder
+from rag.rerank import model as rerank_model
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # the onnx weights take a few seconds to load, so pay that before the first request
+    # both models take a few seconds to load, so pay that before the first request
     embedder()
+    if get_settings().rerank_enabled:
+        rerank_model()
     yield
 
 

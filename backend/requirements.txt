@@ -8,8 +8,14 @@ langchain-text-splitters==0.3.2
 fastembed==0.9.1
 qdrant-client==1.12.1
 anthropic==2.3.0
+
+# cross-encoder reranking, pulls in torch
+sentence-transformers==6.2.0
 pytest==8.3.4
 httpx==0.28.0
+
+# only used by eval/run_eval.py
+PyYAML==6.0.3
 
 # only used by scripts/make_samples.py to build the sample pdfs
 reportlab==5.1.0

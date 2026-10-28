@@ -1,0 +1,70 @@
+# retrieval ground truth for the three sample pdfs. pages are what a reader shows, 1-based.
+# a question is a hit when a retrieved chunk has the right filename and one of the listed pages.
+
+- question: What was the ferritin result and its reference range?
+  filename: lab_results_report.pdf
+  pages: [2]
+  table: true
+
+- question: What is the haemoglobin value?
+  filename: lab_results_report.pdf
+  pages: [1]
+  table: true
+
+- question: What was the white cell count and is it inside the reference range?
+  filename: lab_results_report.pdf
+  pages: [1]
+  table: true
+
+- question: What is the patient's eGFR?
+  filename: lab_results_report.pdf
+  pages: [2]
+  table: true
+
+- question: What was the haemoglobin A1c percentage?
+  filename: lab_results_report.pdf
+  pages: [2]
+  table: true
+
+- question: What did the urine dipstick show for protein?
+  filename: lab_results_report.pdf
+  pages: [2]
+  table: true
+
+- question: Who authorised the laboratory report?
+  filename: lab_results_report.pdf
+  pages: [2]
+
+- question: How long had the patient been fasting before the blood was collected?
+  filename: lab_results_report.pdf
+  pages: [1]
+
+- question: Which antibiotics was the patient discharged on?
+  filename: discharge_summary.pdf
+  pages: [1]
+  table: true
+
+- question: What dose of atorvastatin should be taken and when?
+  filename: discharge_summary.pdf
+  pages: [1]
+  table: true
+
+- question: Why was the patient admitted to hospital?
+  filename: discharge_summary.pdf
+  pages: [1]
+
+- question: What were the oxygen saturations on admission?
+  filename: discharge_summary.pdf
+  pages: [1]
+
+- question: When is the repeat chest radiograph booked for?
+  filename: discharge_summary.pdf
+  pages: [2]
+
+- question: Was there any evidence of appendix perforation on the CT?
+  filename: radiology_report.pdf
+  pages: [1]
+
+- question: How much intravenous contrast was given for the CT?
+  filename: radiology_report.pdf
+  pages: [1]

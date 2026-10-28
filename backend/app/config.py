@@ -18,8 +18,12 @@ class Settings(BaseSettings):
     embedding_model: str = "BAAI/bge-small-en-v1.5"
     chat_model: str = "claude-sonnet-4-5"
 
-    # how many chunks go to the model. step 5 reranks a wider pool down to this.
+    # how many chunks go to the model, and how many qdrant returns for the reranker to sort
     top_k: int = 5
+    candidate_k: int = 20
+
+    rerank_enabled: bool = True
+    rerank_model: str = "cross-encoder/ms-marco-MiniLM-L-6-v2"
 
     upload_dir: str = "./uploads"
 

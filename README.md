@@ -9,13 +9,24 @@ guessing.
 
 You need Docker, Python 3.11 or newer, Node 18 or newer, and an Anthropic API key.
 
-Copy `.env.example` to `.env` and put your key in it:
+A fresh clone has no `.env`, only `.env.example`. Create one before you start the backend, or the
+app will index documents happily and then fail on the first question with a 401 from Anthropic.
+
+On windows:
 
 ```
 copy .env.example .env
 ```
 
-On mac and linux use `cp` instead of `copy`.
+On mac and linux:
+
+```
+cp .env.example .env
+```
+
+Now open `.env` in an editor and paste your key after `ANTHROPIC_API_KEY=`, replacing the
+placeholder. The line should read `ANTHROPIC_API_KEY=sk-ant-...` with no quotes and no spaces around
+the `=`. The other values in the file work as they are.
 
 Start Qdrant:
 

@@ -1,3 +1,4 @@
+import logging
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
@@ -9,9 +10,18 @@ from app.config import get_settings
 from app.errors import ServiceError
 from ingest.store import embedder
 
+log = logging.getLogger("uvicorn.error")
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # upload and retrieval work without the key, the failure only shows up at the first question
+    if not get_settings().anthropic_api_key.strip():
+        log.warning(
+            "ANTHROPIC_API_KEY is not set. copy .env.example to .env and put your key in it, "
+            "otherwise every question will fail."
+        )
+
     # the onnx weights take a few seconds to load, so pay that before the first request
     embedder()
     if get_settings().rerank_enabled:

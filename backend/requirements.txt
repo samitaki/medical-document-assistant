@@ -17,6 +17,6 @@ PyYAML==6.0.3
 # only used by scripts/make_samples.py to build the sample pdfs
 reportlab==5.1.0
 
-# only needed when RERANK_ENABLED=true. a default install does not need this,
-# and it pulls in torch, which is a large download.
-sentence-transformers==6.2.0
+# uncomment only when setting RERANK_ENABLED=true. it pulls in torch, around 2.5 gb,
+# and the default install does not need it.
+# sentence-transformers==6.2.0

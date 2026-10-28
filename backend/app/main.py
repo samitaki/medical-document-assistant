@@ -8,14 +8,15 @@ from api.routes import router
 from app.config import get_settings
 from app.errors import ServiceError
 from ingest.store import embedder
-from rag.rerank import model as rerank_model
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # both models take a few seconds to load, so pay that before the first request
+    # the onnx weights take a few seconds to load, so pay that before the first request
     embedder()
     if get_settings().rerank_enabled:
+        from rag.rerank import model as rerank_model
+
         rerank_model()
     yield
 

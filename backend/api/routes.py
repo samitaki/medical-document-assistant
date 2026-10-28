@@ -12,7 +12,6 @@ from app.errors import ServiceError
 from ingest.pipeline import ingest_pdf
 from ingest.store import delete_all, delete_by_filename, list_documents
 from rag.answer import generate
-from rag.rerank import rerank
 from rag.retrieve import retrieve
 
 router = APIRouter()
@@ -92,5 +91,8 @@ def chat(req: ChatRequest) -> dict:
     with qdrant_errors():
         chunks = retrieve(req.question, s.candidate_k if s.rerank_enabled else s.top_k)
     if s.rerank_enabled:
+        # imported here so a default install does not need torch
+        from rag.rerank import rerank
+
         chunks = rerank(req.question, chunks, s.top_k)
     return generate(req.question, chunks, [m.model_dump() for m in req.history])

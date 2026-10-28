@@ -22,7 +22,7 @@ class Settings(BaseSettings):
     top_k: int = 5
     candidate_k: int = 20
 
-    rerank_enabled: bool = True
+    rerank_enabled: bool = False
     rerank_model: str = "cross-encoder/ms-marco-MiniLM-L-6-v2"
 
     upload_dir: str = "./uploads"

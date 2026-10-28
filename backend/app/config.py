@@ -16,6 +16,10 @@ class Settings(BaseSettings):
     qdrant_collection: str = "medical_docs"
 
     embedding_model: str = "BAAI/bge-small-en-v1.5"
+    chat_model: str = "claude-sonnet-4-5"
+
+    # how many chunks go to the model. step 5 reranks a wider pool down to this.
+    top_k: int = 5
 
     upload_dir: str = "./uploads"
 

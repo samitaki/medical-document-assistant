@@ -1,7 +1,22 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from contextlib import asynccontextmanager
 
-app = FastAPI(title="medical document assistant")
+from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+
+from api.routes import router
+from app.errors import ServiceError
+from ingest.store import embedder
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # the onnx weights take a few seconds to load, so pay that before the first request
+    embedder()
+    yield
+
+
+app = FastAPI(title="medical document assistant", lifespan=lifespan)
 
 # the frontend runs on a different port in dev, so it needs cors
 app.add_middleware(
@@ -10,6 +25,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(router)
+
+
+@app.exception_handler(ServiceError)
+async def service_error(request: Request, exc: ServiceError) -> JSONResponse:
+    return JSONResponse(status_code=exc.status, content={"error": exc.message})
 
 
 @app.get("/health")

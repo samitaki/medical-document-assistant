@@ -87,3 +87,32 @@ def delete_by_filename(filename: str) -> None:
 
 def _point_id(chunk: dict) -> str:
     return str(uuid.uuid5(POINT_NAMESPACE, f"{chunk['filename']}:{chunk['chunk_index']}"))
+
+
+def list_documents() -> list[dict]:
+    """What is indexed right now, read back from the payloads so there is one source of truth."""
+    name = get_settings().qdrant_collection
+    if not client().collection_exists(name):
+        return []
+
+    pages: dict[str, int] = {}
+    counts: dict[str, int] = {}
+    offset = None
+    while True:
+        points, offset = client().scroll(
+            name, limit=256, offset=offset, with_payload=True, with_vectors=False
+        )
+        for p in points:
+            f = p.payload["filename"]
+            pages[f] = max(pages.get(f, 0), p.payload["page"])
+            counts[f] = counts.get(f, 0) + 1
+        if offset is None:
+            break
+
+    return [{"filename": f, "pages": pages[f], "chunks": counts[f]} for f in sorted(counts)]
+
+
+def delete_all() -> None:
+    name = get_settings().qdrant_collection
+    if client().collection_exists(name):
+        client().delete_collection(name)
